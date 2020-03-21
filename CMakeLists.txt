@@ -8,12 +8,9 @@ ENDIF()
 
 project(chiabip158)
 
-link_directories(/usr/local/opt/openssl/lib)
-
 include_directories(
   ${INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_SOURCE_DIR}/src
-  /usr/local/opt/openssl/include
   /usr/local/opt/boost/include
   )
 
@@ -34,5 +31,5 @@ add_executable(bip158
 
 find_package(Boost COMPONENTS system filesystem thread REQUIRED)
 
-target_link_libraries(bip158 biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} -lpthread -lssl -lcrypto)
-target_link_libraries(chiabip158 PRIVATE biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} -lpthread -lssl -lcrypto)
+target_link_libraries(bip158 biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} -lpthread)
+target_link_libraries(chiabip158 PRIVATE biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} -lpthread)

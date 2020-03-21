@@ -3,13 +3,15 @@
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
 #include <crypto/siphash.h>
-#include <random.h>
+//#include <random.h>
 #include <util/bytevectorhash.h>
 
 ByteVectorHash::ByteVectorHash()
 {
+    /* commented out so we don't need to link openssl
     GetRandBytes(reinterpret_cast<unsigned char*>(&m_k0), sizeof(m_k0));
     GetRandBytes(reinterpret_cast<unsigned char*>(&m_k1), sizeof(m_k1));
+    */
 }
 
 size_t ByteVectorHash::operator()(const std::vector<unsigned char>& input) const
