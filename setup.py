@@ -64,7 +64,6 @@ class CMakeBuild(build_ext):
 
 setup(
     name='chiabip158',
-    version='0.2.2',
     author='Mariano Sorgente',
     author_email='mariano@chia.net',
     description='Chia BIP158 (wraps C++)',
