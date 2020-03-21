@@ -45,7 +45,7 @@ jobs:
         name: wheels-${{ matrix.os }}
         path: dist
     - name: Publish distribution to Test PyPI
-      if: 0
+      if: 1
       uses: pypa/gh-action-pypi-publish@master
       with:
         password: ${{ secrets.test_pypi_password }}
