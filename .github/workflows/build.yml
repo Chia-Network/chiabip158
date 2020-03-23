@@ -32,9 +32,10 @@ jobs:
         python -m cibuildwheel --output-dir dist
       env:
         CIBW_BUILD: cp37-*
-        CIBW_BEFORE_BUILD_LINUX: yum -y install boost boost-devel
-        CIBW_BEFORE_BUILD_MACOS: brew install boost
-
+        CIBW_BEFORE_BUILD_LINUX: yum -y install boost-devel && python -m pip install --upgrade pip && pip install pybind11
+        CIBW_BEFORE_BUILD_MACOS: brew install boost && python -m pip install --upgrade pip && pip install pybind11
+        CIBW_TEST_REQUIRES: pytest
+        CIBW_TEST_COMMAND: py.test tests || echo "failed"
     - uses: actions/upload-artifact@v1
       with:
         name: wheels
