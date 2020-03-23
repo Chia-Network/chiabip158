@@ -8,10 +8,12 @@ ENDIF()
 
 project(chiabip158)
 
+find_package(Boost COMPONENTS system filesystem thread REQUIRED)
+
 include_directories(
   ${INCLUDE_DIRECTORIES}
   ${CMAKE_CURRENT_SOURCE_DIR}/src
-  /usr/local/opt/boost/include
+  ${Boost_INCLUDE_DIRS}
   )
 
 set (CMAKE_CXX_FLAGS "-DHAVE_WORKING_BOOST_SLEEP -g -O3 -Wall -msse2 -msse -march=native -std=c++14 -maes")
@@ -29,7 +31,5 @@ add_executable(bip158
     main.cpp
 )
 
-find_package(Boost COMPONENTS system filesystem thread REQUIRED)
-
-target_link_libraries(bip158 biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} -lpthread)
-target_link_libraries(chiabip158 PRIVATE biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY} -lpthread)
+target_link_libraries(bip158 biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY})
+target_link_libraries(chiabip158 PRIVATE biplib ${Boost_FILESYSTEM_LIBRARY} ${Boost_SYSTEM_LIBRARY} ${Boost_THREAD_LIBRARY})
