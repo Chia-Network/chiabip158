@@ -5,7 +5,6 @@ This implements the compact block filter construction in BIP 158. The code is no
 ### Install
 
 ```bash
-git submodule update --init --recursive
 python3 -m venv env
 . env/bin/activate
 pip3 install .
@@ -24,9 +23,7 @@ Install brew:
 ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
 
 brew install python3  
-brew install cmake  
 brew install boost  
-brew install openssl  
 
 At this point the only error is can’t find boost_thread lib
 
