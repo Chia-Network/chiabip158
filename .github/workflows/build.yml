@@ -12,7 +12,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-
+      with:
+        fetch-depth: 0
+        # we need fetch-depth 0 so setuptools_scm can resolve tags
+    - name: Get tags
+      run: |
+        git fetch origin +refs/tags/*:refs/tags/*
     - uses: actions/setup-python@v1
       name: Install Python
       with:
