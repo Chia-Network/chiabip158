@@ -33,7 +33,7 @@ $ find /usr/local/lib/ | grep boost_thread
 libboost_thread-mt.a  
 libboost_thread-mt.dylib  
 
-Solution, with no guarantees that this is “the Right Way to do things”, but appears to work fine for the configure stage:
+Solution, with no guarantees that this is "the Right Way to do things", but appears to work fine for the configure stage:
 
 $ cd /usr/local/lib  
 $ ln -s libboost_thread-mt.a libboost_thread.a  
