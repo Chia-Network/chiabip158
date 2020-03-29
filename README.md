@@ -13,7 +13,7 @@ pip3 install .
 ### Run python tests
 
 ```bash
-python3 python-bindings/test.py
+python3 tests/simple_test.py
 ```
 
 ### Installation steps on a fresh OSX image
