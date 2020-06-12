@@ -12,14 +12,30 @@ jobs:
         os: [macos-latest, ubuntu-18.04, windows-latest]
 
     steps:
+    - name: Cancel previous runs on the same branch
+      uses: styfle/cancel-workflow-action@0.4.0
+      with:
+        access_token: ${{ github.token }}
+
     - uses: actions/checkout@v1
       with:
         fetch-depth: 0
         # we need fetch-depth 0 so setuptools_scm can resolve tags
+
     - uses: actions/setup-python@v1
       name: Install Python
       with:
         python-version: '3.7'
+
+    - name: Test for secrets access
+      id: check_secrets
+      shell: bash
+      run: |
+        unset HAS_SECRET
+        if [ -n "$SECRET" ]; then HAS_SECRET='true' ; fi
+        echo ::set-output name=HAS_SECRET::${HAS_SECRET}
+      env:
+        SECRET: "${{ secrets.test_pypi_password }}"
 
     - name: Install cibuildwheel
       run: |
@@ -31,7 +47,7 @@ jobs:
         pip install pep517
         python -m pep517.build --source --out-dir dist .
 
-    - name: Build wheel
+    - name: Build wheel and test
       run: |
         python -m cibuildwheel --output-dir dist
       env:
@@ -39,29 +55,42 @@ jobs:
         CIBW_BUILD: cp37-* cp38-*
         # we need boost
         # we need pybind11 to be globally available for cibuildwheel
-        CIBW_BEFORE_BUILD_LINUX: yum -y install boost-devel && python -m pip install --upgrade pip && pip install pybind11
-        CIBW_BEFORE_BUILD_MACOS: brew install boost && python -m pip install --upgrade pip && pip install pybind11
+        CIBW_BEFORE_BUILD_LINUX: ^
+          yum -y install boost-devel
+          && python -m pip install --upgrade pip
+          && pip install pybind11
+        CIBW_BEFORE_BUILD_MACOS: ^
+          brew install boost
+          && python -m pip install --upgrade pip
+          && pip install pybind11
         CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=10.14
         CIBW_BUILD_VERBOSITY_MACOS: 0
-        CIBW_BEFORE_BUILD_WINDOWS: python -m pip install --upgrade pip && pip install pybind11
+        CIBW_BEFORE_BUILD_WINDOWS: ^
+          python -m pip install --upgrade pip
+          && pip install pybind11
         CIBW_TEST_REQUIRES: pytest
         CIBW_TEST_COMMAND: py.test -v {project}/tests
+
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
       with:
         name: wheels
         path: ./dist
+
     - name: Install twine
       run: pip install twine
+
     - name: Publish distribution to Test PyPI
+      if: steps.check_secrets.outputs.HAS_SECRET
       env:
         TWINE_REPOSITORY_URL: https://test.pypi.org/legacy/
         TWINE_USERNAME: __token__
         TWINE_NON_INTERACTIVE: 1
         TWINE_PASSWORD: ${{ secrets.test_pypi_password }}
       run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
+
     - name: Publish distribution to PyPI
-      if: startsWith(github.event.ref, 'refs/tags')
+      if: startsWith(github.event.ref, 'refs/tags') && steps.check_secrets.outputs.HAS_SECRET
       env:
         TWINE_USERNAME: __token__
         TWINE_NON_INTERACTIVE: 1
