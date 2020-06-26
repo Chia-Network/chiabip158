@@ -83,11 +83,11 @@ class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
     c_opts = {
         'msvc': ['/EHsc'],
-        'unix': [],
+        'unix': [""],
     }
     l_opts = {
-        'msvc': [],
-        'unix': [],
+        'msvc': [""],
+        'unix': [""],
     }
 
     if sys.platform == 'darwin':
@@ -119,7 +119,9 @@ setup(
     license='Apache License',
     python_requires='>=3.7',
     long_description=open('README.md').read(),
+    long_description_content_type="text/markdown",
     build_requires=["pybind11"],
+    url="https://github.com/Chia-Network/chiabip158",
     ext_modules=ext_modules,
     cmdclass={'build_ext': BuildExt},
     zip_safe=False,
