@@ -1,4 +1,5 @@
 # Chia BIP158
+
 ![Build](https://github.com/Chia-Network/chiabip158/workflows/Build/badge.svg)
 ![PyPI](https://img.shields.io/pypi/v/chiabip158?logo=pypi)
 ![PyPI - Format](https://img.shields.io/pypi/format/chiabip158?logo=pypi)
@@ -58,3 +59,29 @@ cd /usr/local/lib
 ln -s libboost_thread-mt.a libboost_thread.a  
 ln -s libboost_thread-mt.dylib libboost_thread.dylib  
 ```
+
+## ci Building
+
+The primary build process for this repository is to use GitHub Actions to
+build binary wheels for MacOS, Linux (x64 and aarch64), and Windows and publish
+them with a source wheel on PyPi. See `.github/workflows/build.yml`. CMake uses
+[FetchContent](https://cmake.org/cmake/help/latest/module/FetchContent.html)
+to download [pybind11](https://github.com/pybind/pybind11). Building is then
+managed by [cibuildwheel](https://github.com/joerick/cibuildwheel). Further
+installation is then available via `pip install chiabip158` e.g.
+
+## Contributing and workflow
+
+Contributions are welcome and more details are available in chia-blockchain's
+[CONTRIBUTING.md](https://github.com/Chia-Network/chia-blockchain/blob/master/CONTRIBUTING.md).
+
+The master branch is usually the currently released latest version on PyPI.
+Note that at times chiabip158 will be ahead of the release version that
+chia-blockchain requires in it's master/release version in preparation for a
+new chia-blockchain release. Please branch or fork master and then create a
+pull request to the master branch. Linear merging is enforced on master and
+merging requires a completed review. PRs will kick off a GitHub actions ci
+build and analysis of chiabip158 at
+[lgtm.com](https://lgtm.com/projects/g/Chia-Network/chiabip158/?mode=list).
+Please make sure your build is passing and that it does not increase alerts
+at lgtm.
