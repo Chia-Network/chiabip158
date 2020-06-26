@@ -1,9 +1,10 @@
 # based on
 # https://github.com/pybind/python_example/blob/master/setup.py
 
-from setuptools import setup, setuptools, Extension
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 import sys
+import setuptools
 
 
 class get_pybind_include(object):
@@ -72,8 +73,7 @@ def cpp_flag(compiler):
     flags = ['-std=c++17', '-std=c++14', '-std=c++11']
 
     for flag in flags:
-        if has_flag(compiler, flag):
-            return flag
+        if has_flag(compiler, flag): return flag
 
     raise RuntimeError('Unsupported compiler -- at least C++11 support '
                        'is needed!')
@@ -83,11 +83,11 @@ class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
     c_opts = {
         'msvc': ['/EHsc'],
-        'unix': [""],
+        'unix': [],
     }
     l_opts = {
-        'msvc': [""],
-        'unix': [""],
+        'msvc': [],
+        'unix': [],
     }
 
     if sys.platform == 'darwin':
@@ -100,19 +100,16 @@ class BuildExt(build_ext):
         opts = self.c_opts.get(ct, [])
         link_opts = self.l_opts.get(ct, [])
         if ct == 'unix':
-            opts.append('-DVERSION_INFO="%s"'
-                        % self.distribution.get_version())
+            opts.append('-DVERSION_INFO="%s"' % self.distribution.get_version())
             opts.append(cpp_flag(self.compiler))
             if has_flag(self.compiler, '-fvisibility=hidden'):
                 opts.append('-fvisibility=hidden')
         elif ct == 'msvc':
-            opts.append('/DVERSION_INFO=\\"%s\\"'
-                        % self.distribution.get_version())
+            opts.append('/DVERSION_INFO=\\"%s\\"' % self.distribution.get_version())
         for ext in self.extensions:
             ext.extra_compile_args = opts
             ext.extra_link_args = link_opts
         build_ext.build_extensions(self)
-
 
 setup(
     name='chiabip158',
