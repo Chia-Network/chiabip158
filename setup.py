@@ -1,7 +1,7 @@
 # based on
 # https://github.com/pybind/python_example/blob/master/setup.py
 
-from setuptools import setup, setuptools, Extension
+from setuptools import setup, Extension
 from setuptools.command.build_ext import build_ext
 import sys
 
