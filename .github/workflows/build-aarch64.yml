@@ -1,4 +1,4 @@
-name: Build
+name: Build ARM64 wheel
 
 on: [push, pull_request]
 
@@ -9,7 +9,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-latest, ubuntu-18.04, windows-latest]
+        os: [ARM64]
 
     steps:
     - name: Cancel previous runs on the same branch
@@ -23,11 +23,6 @@ jobs:
         fetch-depth: 0
         # we need fetch-depth 0 so setuptools_scm can resolve tags
 
-    - uses: actions/setup-python@v2
-      name: Install Python
-      with:
-        python-version: '3.7'
-
     - name: Test for secrets access
       id: check_secrets
       shell: bash
@@ -38,50 +33,49 @@ jobs:
       env:
         SECRET: "${{ secrets.test_pypi_password }}"
 
-    - name: Install cibuildwheel
+    - name: Prepare cibuildwheel
       run: |
+        if [ ! -f "venv" ]; then rm -rf venv; fi
+        sudo apt-get install python3-venv python3-pip -y
+        python3 -m venv venv
+        source venv/bin/activate
         python -m pip install --upgrade pip
-        python -m pip install cibuildwheel==1.5.1
+        pip install wheel
+        pip install cibuildwheel==1.5.1
 
     - name: Lint source with flake8
       run: |
+        source venv/bin/activate
         pip install flake8
         flake8 tests setup.py
 
 #    - name: Lint source with mypy
 #      run: |
+#        source venv/bin/activate
 #        pip install mypy
 #        mypy --config-file mypi.ini setup.py tests
 
-    - name: Build source distribution with MacOS
-      if: startsWith(matrix.os, 'mac')
-      run: |
-        pip install pep517
-        python -m pep517.build --source --out-dir dist .
-
     - name: Build wheel and test
       run: |
+        source venv/bin/activate
         python -m cibuildwheel --output-dir dist
       env:
-        # build just python 3.7
-        CIBW_BUILD: cp37-* cp38-*
+        # build python 3.7 and 3.8
+        CIBW_BUILD: cp38-*
+        CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
         # we need boost
-        # we need pybind11 to be globally available for cibuildwheel
         CIBW_BEFORE_BUILD_LINUX: >
           yum -y install boost-devel
+          && yum -y install epel-release
+          && yum -y install cmake3
+          && ln -s /usr/bin/cmake3 /usr/local/bin/cmake
           && python -m pip install --upgrade pip
-          && pip install pybind11
-        CIBW_BEFORE_BUILD_MACOS: >
-          brew install boost
-          && python -m pip install --upgrade pip
-          && pip install pybind11
-        CIBW_ENVIRONMENT_MACOS: MACOSX_DEPLOYMENT_TARGET=10.14
-        CIBW_BUILD_VERBOSITY_MACOS: 0
-        CIBW_BEFORE_BUILD_WINDOWS: >
-          python -m pip install --upgrade pip
-          && pip install pybind11
+          && cmake --version
+          && uname -a
+        CIBW_BUILD_VERBOSITY_LINUX: 0
         CIBW_TEST_REQUIRES: pytest
         CIBW_TEST_COMMAND: py.test -v {project}/tests
+        CIBW_ENVIRONMENT_LINUX: "BUILD_VDF_CLIENT=N"
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v1
@@ -90,7 +84,9 @@ jobs:
         path: ./dist
 
     - name: Install twine
-      run: pip install twine
+      run: |
+        source venv/bin/activate
+        pip install twine
 
     - name: Publish distribution to Test PyPI
       if: steps.check_secrets.outputs.HAS_SECRET
@@ -99,7 +95,9 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_NON_INTERACTIVE: 1
         TWINE_PASSWORD: ${{ secrets.test_pypi_password }}
-      run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
+      run: |
+        source venv/bin/activate
+        twine upload --non-interactive --skip-existing --verbose 'dist/*'
 
     - name: Publish distribution to PyPI
       if: startsWith(github.event.ref, 'refs/tags') && steps.check_secrets.outputs.HAS_SECRET
@@ -107,4 +105,10 @@ jobs:
         TWINE_USERNAME: __token__
         TWINE_NON_INTERACTIVE: 1
         TWINE_PASSWORD: ${{ secrets.pypi_password }}
-      run: twine upload --non-interactive --skip-existing --verbose 'dist/*'
+      run: |
+        source venv/bin/activate
+        twine upload --non-interactive --skip-existing --verbose 'dist/*'
+
+    - name: Clean up venv
+      run: |
+        rm -rf venv
