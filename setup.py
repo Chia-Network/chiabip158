@@ -1,6 +1,6 @@
-# based on
-# https://github.com/pybind/python_example/blob/master/setup.py
-
+""" based on
+    https://github.com/pybind/python_example/blob/master/setup.py
+"""
 from setuptools import setup, setuptools, Extension
 from setuptools.command.build_ext import build_ext
 import sys
@@ -18,7 +18,6 @@ class get_pybind_include(object):
 
     def __str__(self):
         import pybind11
-
         return pybind11.get_include(self.user)
 
 
@@ -85,11 +84,11 @@ class BuildExt(build_ext):
 
     c_opts = {
         'msvc': ['/EHsc'],
-        'unix': [""],
+        'unix': [],
     }
     l_opts = {
-        'msvc': [""],
-        'unix': [""],
+        'msvc': [],
+        'unix': [],
     }
 
     if sys.platform == 'darwin':
@@ -125,7 +124,7 @@ setup(
     python_requires='>=3.7',
     long_description=open('README.md').read(),
     long_description_content_type='text/markdown',
-    build_requires=['pybind11'],
+    setup_requires=['pybind11>=2.5.0'],
     url='https://github.com/Chia-Network/chiabip158',
     ext_modules=ext_modules,
     cmdclass={'build_ext': BuildExt},
