@@ -86,11 +86,11 @@ class BuildExt(build_ext):
 
     c_opts = {
         "msvc": ["/EHsc"],
-        "unix": [],
+        "unix": [''],
     }
     l_opts = {
-        "msvc": [],
-        "unix": [],
+        "msvc": [''],
+        "unix": [''],
     }
 
     if sys.platform == "darwin":
