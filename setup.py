@@ -56,7 +56,6 @@ def has_flag(compiler, flagname):
     the specified compiler.
     """
     import tempfile
-
     with tempfile.NamedTemporaryFile("w", suffix=".cpp") as f:
         f.write("int main (int argc, char **argv) { return 0; }")
         try:
@@ -85,18 +84,18 @@ class BuildExt(build_ext):
     """A custom build extension for adding compiler-specific options."""
 
     c_opts = {
-        "msvc": ["/EHsc"],
-        "unix": [''],
+        'msvc': ['/EHsc'],
+        'unix': [''],
     }
     l_opts = {
-        "msvc": [''],
-        "unix": [''],
+        'msvc': [''],
+        'unix': [''],
     }
 
-    if sys.platform == "darwin":
-        darwin_opts = ["-stdlib=libc++", "-mmacosx-version-min=10.14"]
-        c_opts["unix"] += darwin_opts
-        l_opts["unix"] += darwin_opts
+    if sys.platform == 'darwin':
+        darwin_opts = ['-stdlib=libc++', '-mmacosx-version-min=10.14']
+        c_opts['unix'] += darwin_opts
+        l_opts['unix'] += darwin_opts
 
     def build_extensions(self):
         ct = self.compiler.compiler_type
