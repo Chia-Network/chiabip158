@@ -1,4 +1,4 @@
-name: Build
+name: Build wheels
 
 on: [push, pull_request]
 
@@ -65,6 +65,7 @@ jobs:
       env:
         # build just python 3.7
         CIBW_BUILD: cp37-* cp38-*
+        CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
         # we need boost
         # we need pybind11 to be globally available for cibuildwheel
         CIBW_BEFORE_BUILD_LINUX: >
