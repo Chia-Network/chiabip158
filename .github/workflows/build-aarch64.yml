@@ -41,7 +41,7 @@ jobs:
         source venv/bin/activate
         python -m pip install --upgrade pip
         pip install wheel
-        pip install cibuildwheel==1.5.1
+        pip install cibuildwheel==1.5.5
 
     - name: Lint source with flake8
       run: |
@@ -61,24 +61,25 @@ jobs:
         python -m cibuildwheel --output-dir dist
       env:
         # build python 3.7 and 3.8
-        CIBW_BUILD: cp38-*
+        CIBW_BUILD: cp37* cp38-*
         CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
         # we need boost
-        CIBW_BEFORE_BUILD_LINUX: >
+        CIBW_BEFORE_ALL_LINUX: >
           yum -y install boost-devel
           && yum -y install epel-release
           && yum -y install cmake3
           && ln -s /usr/bin/cmake3 /usr/local/bin/cmake
-          && python -m pip install --upgrade pip
           && cmake --version
           && uname -a
+        CIBW_BEFORE_BUILD_LINUX: >
+          python -m pip install --upgrade pip
         CIBW_BUILD_VERBOSITY_LINUX: 0
         CIBW_TEST_REQUIRES: pytest
         CIBW_TEST_COMMAND: py.test -v {project}/tests
         CIBW_ENVIRONMENT_LINUX: "BUILD_VDF_CLIENT=N"
 
     - name: Upload artifacts
-      uses: actions/upload-artifact@v1
+      uses: actions/upload-artifact@v2
       with:
         name: wheels
         path: ./dist
