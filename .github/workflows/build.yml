@@ -13,7 +13,7 @@ jobs:
 
     steps:
     - name: Cancel previous runs on the same branch
-      uses: styfle/cancel-workflow-action@0.4.0
+      uses: styfle/cancel-workflow-action@0.5.0
       with:
         access_token: ${{ github.token }}
 
@@ -53,8 +53,8 @@ jobs:
 #        pip install mypy
 #        mypy --config-file mypi.ini setup.py tests
 
-    - name: Build source distribution with MacOS
-      if: startsWith(matrix.os, 'mac')
+    - name: Build source distribution with Ubuntu
+      if: startsWith(matrix.os, 'ubuntu')
       run: |
         pip install pep517
         python -m pep517.build --source --out-dir dist .
