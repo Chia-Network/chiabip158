@@ -69,7 +69,7 @@ jobs:
         # we need boost
         # we need pybind11 to be globally available for cibuildwheel
         CIBW_BEFORE_ALL_LINUX: >
-          yum -y install boost-devel
+          yum -y install boost-devel gcc-c++
         CIBW_BEFORE_BUILD_LINUX: >
           python -m pip install --upgrade pip
           && pip install pybind11
