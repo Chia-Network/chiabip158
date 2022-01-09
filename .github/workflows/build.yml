@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Cancel previous runs on the same branch
       if: ${{ github.ref != 'refs/heads/master' }}
-      uses: styfle/cancel-workflow-action@0.7.0
+      uses: styfle/cancel-workflow-action@0.9.1
       with:
         access_token: ${{ github.token }}
 
@@ -41,12 +41,13 @@ jobs:
         python -m build --sdist --outdir dist .
 
     - name: Build ${{ matrix.os }} wheels and test
-      uses: joerick/cibuildwheel@v1.10.0
+      uses: joerick/cibuildwheel@v2.3.1
       with:
         output-dir: dist
       env:
         # build just python 3.7
-        CIBW_BUILD: cp37-* cp38-* cp39-*
+        CIBW_BUILD: cp37-* cp38-* cp39-* cp310-*
+        CIBW_SKIP: '*-musllinux_*'
         CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
         # we need boost
         # we need pybind11 to be globally available for cibuildwheel
