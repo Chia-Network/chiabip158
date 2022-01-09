@@ -14,7 +14,7 @@ jobs:
     steps:
     - name: Cancel previous runs on the same branch
       if: ${{ github.ref != 'refs/heads/master' }}
-      uses: styfle/cancel-workflow-action@0.7.0
+      uses: styfle/cancel-workflow-action@0.9.1
       with:
         access_token: ${{ github.token }}
 
@@ -29,7 +29,7 @@ jobs:
         source venv/bin/activate
         python -m pip install --upgrade pip
         pip install wheel
-        pip install cibuildwheel==1.10.0
+        pip install cibuildwheel==2.3.1
 
     - name: Lint source with flake8
       run: |
@@ -43,7 +43,8 @@ jobs:
         python -m cibuildwheel --output-dir dist
       env:
         # build python 3.7 and 3.8
-        CIBW_BUILD: cp37* cp38-* cp39-*
+        CIBW_BUILD: cp37* cp38-* cp39-* cp-310
+        CIBW_SKIP: '*-musllinux_*'
         CIBW_MANYLINUX_AARCH64_IMAGE: manylinux2014
         # we need boost
         CIBW_BEFORE_ALL_LINUX: >
