@@ -111,6 +111,10 @@ jobs:
       with:
         python-version: ${{ matrix.python.major-dot-minor }}
 
+    - name: Install pipx
+      run: |
+        pip install pipx
+
     - name: Build and test
       uses: pypa/cibuildwheel@v2.7.0
       with:
@@ -125,6 +129,7 @@ jobs:
         CIBW_MANYLINUX_X86_64_IMAGE: manylinux2010
         CIBW_BEFORE_ALL_LINUX: >
           yum -y install boost-devel gcc-c++
+          && uname -a
         CIBW_BEFORE_BUILD_LINUX: >
           python -m pip install --upgrade pip
           && pip install pybind11
