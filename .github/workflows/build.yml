@@ -136,17 +136,17 @@ jobs:
           && uname -a
         CIBW_BEFORE_BUILD_LINUX: >
           python -m pip install --upgrade pip
-          && pip install pybind11
+          && pip install pybind11>=2.10.0
         CIBW_ARCHS_MACOS: ${{ matrix.os.cibw-archs-macos[matrix.arch.matrix] }}
         CIBW_BEFORE_ALL_MACOS: >
           brew install boost
         CIBW_BEFORE_BUILD_MACOS: >
           python -m pip install --upgrade pip
-          && pip install pybind11
+          && pip install pybind11>=2.10.0
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=10.14"
         CIBW_BEFORE_ALL_WINDOWS: >
           python -m pip install --upgrade pip
-          && pip install pybind11
+          && pip install pybind11>=2.10.0
         CIBW_TEST_REQUIRES: pytest
         CIBW_TEST_COMMAND: py.test -v {project}/tests
 

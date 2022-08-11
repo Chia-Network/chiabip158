@@ -125,7 +125,7 @@ setup(
     python_requires=">=3.7",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
-    setup_requires=["pybind11>=2.5.0"],
+    setup_requires=["pybind11>=2.10.0"],
     url="https://github.com/Chia-Network/chiabip158",
     ext_modules=ext_modules,
     cmdclass={"build_ext": BuildExt},
