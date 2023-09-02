@@ -69,11 +69,6 @@ jobs:
               arch: manylinux2014
               intel: manylinux2014
             matrix: '3.11'
-        arch:
-          - name: ARM
-            matrix: arm
-          - name: Intel
-            matrix: intel
 
     steps:
     - name: Clean workspace
