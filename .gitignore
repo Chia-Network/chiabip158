@@ -1,2 +1,6 @@
 .mypy_cache
-*.whl
+*.egg-info
+/dist
+/venv
+/build
+/var
