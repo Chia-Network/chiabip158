@@ -7,23 +7,26 @@ mod bindings {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
 }
 
-#[repr(transparent)]
-pub struct Element(bindings::std_vector);
-
-impl Element {
-    pub fn new(bytes: &[u8]) -> Self {
-        Self(unsafe { bindings::create_element(bytes.as_ptr(), bytes.len()) })
+pub fn encode_filter(slices: &[&[u8]]) -> Box<[u8]> {
+    let mut slices: Vec<bindings::Slice> = slices
+        .iter()
+        .map(|slice| bindings::Slice {
+            bytes: slice.as_ptr(),
+            length: slice.len(),
+        })
+        .collect();
+    unsafe {
+        let filter = bindings::encode_filter(slices.as_ptr(), slices.len());
+        let slice = std::slice::from_raw_parts(filter.bytes, filter.length);
+        Box::from_raw(slice as *const [u8] as *mut [u8])
     }
 }
 
-pub fn encode_filter(elements: &[Element]) -> Vec<u8> {
-    unsafe {
-        let mut encoded_filter =
-            bindings::get_encoded_filter(std::mem::transmute(elements.as_ptr()), elements.len());
-        Vec::from_raw_parts(
-            encoded_filter.bytes(),
-            encoded_filter.size(),
-            encoded_filter.size(),
-        )
-    }
+#[test]
+fn test_filter() {
+    let elem1 = b"abc";
+    let elem2 = b"xyz";
+    let elem3 = b"123";
+    let filter = encode_filter(&[elem1, elem2, elem3]);
+    assert_eq!(filter.as_ref(), [3, 95, 172, 194, 74, 190, 73, 221, 182]);
 }

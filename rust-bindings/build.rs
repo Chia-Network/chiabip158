@@ -2,6 +2,8 @@ use std::env;
 use std::path::PathBuf;
 
 fn main() {
+    println!("cargo:rerun-if-changed=wrapper.cpp");
+
     cc::Build::new()
         .cpp(true)
         .flag("-std=c++11")
@@ -27,9 +29,8 @@ fn main() {
         .clang_arg("c++")
         .clang_arg("-I../src")
         .clang_arg("-std=c++11")
-        .allowlist_type("EncodedFilter")
-        .allowlist_function("create_element")
-        .allowlist_function("get_encoded_filter")
+        .allowlist_type("Slice")
+        .allowlist_function("encode_filter")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");
