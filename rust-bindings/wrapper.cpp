@@ -4,7 +4,7 @@ Slice encode_filter(Slice const* hashes, size_t length) {
     GCSFilter::ElementSet elements;
     for (size_t i = 0; i < length; i++) {
         Slice hash = hashes[i];
-        auto element = GCSFilter::Element(hash.bytes, hash.bytes + length);
+        auto element = GCSFilter::Element(hash.bytes, hash.bytes + hash.length);
         elements.insert(std::move(element));
     }
     
