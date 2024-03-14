@@ -6,7 +6,7 @@ fn main() {
 
     cc::Build::new()
         .cpp(true)
-        .flag("-std=c++11")
+        .std("c++14")
         .files([
             "../src/blockfilter.cpp",
             "../src/crypto/sha256.cpp",
@@ -28,7 +28,7 @@ fn main() {
         .clang_arg("-x")
         .clang_arg("c++")
         .clang_arg("-I../src")
-        .clang_arg("-std=c++11")
+        .clang_arg("-std=c++14")
         .allowlist_type("Slice")
         .allowlist_function("encode_filter")
         .allowlist_function("free_slice")
