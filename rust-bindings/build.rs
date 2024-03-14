@@ -31,6 +31,7 @@ fn main() {
         .clang_arg("-std=c++11")
         .allowlist_type("Slice")
         .allowlist_function("encode_filter")
+        .allowlist_function("free_slice")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");

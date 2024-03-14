@@ -24,3 +24,7 @@ Slice encode_filter(const Slice hashes[], size_t length) {
     };
     return slice;
 }
+
+void free_slice(Slice slice) {
+    delete[] slice.bytes;
+}

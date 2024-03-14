@@ -6,3 +6,5 @@ typedef struct {
 } Slice;
 
 Slice encode_filter(const Slice hashes[], size_t length);
+
+void free_slice(Slice slice);
