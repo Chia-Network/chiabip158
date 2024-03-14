@@ -1,7 +1,5 @@
 #![allow(non_camel_case_types)]
 #![allow(non_snake_case)]
-#![allow(clippy::missing_safety_doc)]
-#![allow(unused)]
 
 mod bindings {
     include!(concat!(env!("OUT_DIR"), "/bindings.rs"));
@@ -10,7 +8,7 @@ mod bindings {
 /// Encode a BIP158 filter from a list of slices.
 pub fn encode_filter(slices: &[&[u8]]) -> Box<[u8]> {
     // Convert the slices to a type that C/C++ can understand.
-    let mut slices: Vec<bindings::Slice> = slices
+    let slices: Vec<bindings::Slice> = slices
         .iter()
         .map(|slice| bindings::Slice {
             bytes: slice.as_ptr(),
