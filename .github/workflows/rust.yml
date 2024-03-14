@@ -37,6 +37,20 @@ jobs:
             matrix: windows
             runs-on:
               intel: [windows-latest]
+        arch:
+          - name: ARM
+            matrix: arm
+          - name: Intel
+            matrix: intel
+        exclude:
+          - os:
+              name: Windows
+              matrix: windows
+              runs-on:
+                intel: [windows-latest]
+            arch:
+              name: ARM
+              matrix: arm
     steps:
       - uses: actions/checkout@v3
 
