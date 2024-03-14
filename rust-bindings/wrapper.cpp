@@ -1,14 +1,11 @@
 #include "wrapper.h"
 
-Slice encode_filter(const Slice hashes[], size_t length) {
+Slice encode_filter(Slice const* hashes, size_t length) {
     GCSFilter::ElementSet elements;
     for (size_t i = 0; i < length; i++) {
         Slice hash = hashes[i];
-        GCSFilter::Element element(hash.length);
-        for (size_t j = 0; j < hash.length; j++) {
-            element[j] = hash.bytes[j];
-        }
-        elements.insert(element);
+        auto element = GCSFilter::Element(hash.bytes, hash.bytes + length);
+        elements.insert(std::move(element));
     }
     
     GCSFilter filter({0, 0, 20, 1 << 20}, elements);
@@ -18,11 +15,7 @@ Slice encode_filter(const Slice hashes[], size_t length) {
     unsigned char* ptr = new unsigned char[len];
     std::copy(encoded.begin(), encoded.end(), ptr);
 
-    Slice slice {
-        .bytes = ptr,
-        .length = len
-    };
-    return slice;
+    return Slice { ptr, len };
 }
 
 void free_slice(Slice slice) {
