@@ -19,3 +19,7 @@ bindgen = "0.69.4"
 # TLDR: --show-sdk-platform-version needs to be replaced with --show-sdk-version
 # Once this is released, this can be reverted back to the main crate
 cc = { git = "https://github.com/0123456789-jpg/cc-rs", rev = "41a8731" }
+
+[dev-dependencies]
+rand = "0.8.5"
+rand_chacha = "0.3.1"

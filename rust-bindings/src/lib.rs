@@ -107,31 +107,82 @@ impl Bip158Filter {
     }
 }
 
-#[test]
-fn test_filter() {
-    let elem1 = b"abc";
-    let elem2 = b"xyz";
-    let elem3 = b"123";
-    let not_elem1 = b"hello";
-    let not_elem2 = b"bye";
+#[cfg(test)]
+mod tests {
+    use std::collections::HashSet;
 
-    let filter = Bip158Filter::new(&[elem1, elem2, elem3]);
+    use rand::{RngCore, SeedableRng};
+    use rand_chacha::ChaCha8Rng;
 
-    let encoded = filter.encode();
-    assert_eq!(encoded.as_ref(), [3, 95, 172, 194, 74, 190, 73, 221, 182]);
-    assert_eq!(&encoded, &encoded);
+    use super::*;
 
-    assert!(filter.matches(elem1));
-    assert!(filter.matches(elem2));
-    assert!(filter.matches(elem3));
+    #[test]
+    fn test_filter() {
+        let elem1 = b"abc";
+        let elem2 = b"xyz";
+        let elem3 = b"123";
+        let not_elem1 = b"hello";
+        let not_elem2 = b"bye";
 
-    assert!(!filter.matches(not_elem1));
-    assert!(!filter.matches(not_elem2));
+        let filter = Bip158Filter::new(&[elem1, elem2, elem3]);
 
-    assert!(filter.matches_any(&[elem1, elem2, elem3]));
-    assert!(filter.matches_any(&[elem1, elem2]));
-    assert!(filter.matches_any(&[elem3]));
+        let encoded = filter.encode();
+        assert_eq!(encoded.as_ref(), [3, 95, 172, 194, 74, 190, 73, 221, 182]);
+        assert_eq!(&encoded, &encoded);
 
-    assert!(!filter.matches_any(&[]));
-    assert!(!filter.matches_any(&[not_elem1, not_elem2]));
+        assert!(filter.matches(elem1));
+        assert!(filter.matches(elem2));
+        assert!(filter.matches(elem3));
+
+        assert!(!filter.matches(not_elem1));
+        assert!(!filter.matches(not_elem2));
+
+        assert!(filter.matches_any(&[elem1, elem2, elem3]));
+        assert!(filter.matches_any(&[elem1, elem2]));
+        assert!(filter.matches_any(&[elem3]));
+
+        assert!(!filter.matches_any(&[]));
+        assert!(!filter.matches_any(&[not_elem1, not_elem2]));
+    }
+
+    #[test]
+    fn test_false_positive() {
+        let mut rng = ChaCha8Rng::seed_from_u64(0);
+
+        let hashes: Vec<[u8; 4]> = (0..100)
+            .map(|_| {
+                let mut hash = [0; 4];
+                rng.fill_bytes(&mut hash);
+                hash
+            })
+            .collect();
+
+        let mut hash_set = HashSet::new();
+        for hash in hashes.iter() {
+            hash_set.insert(hash);
+        }
+
+        let refs: Vec<&[u8]> = hashes.iter().map(|hash| hash.as_ref()).collect();
+        let filter = Bip158Filter::new(&refs);
+
+        let count = 5000000;
+        let hashes: Vec<[u8; 4]> = (0..count)
+            .map(|_| {
+                let mut hash = [0; 4];
+                rng.fill_bytes(&mut hash);
+                hash
+            })
+            .filter(|hash| !hash_set.contains(hash))
+            .collect();
+
+        let mut matches = 0;
+
+        for hash in hashes {
+            if filter.matches(&hash) {
+                matches += 1;
+            }
+        }
+
+        assert_eq!(matches, 10);
+    }
 }
