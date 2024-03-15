@@ -99,7 +99,7 @@ impl Bip158Filter {
 
 impl Drop for Bip158Filter {
     fn drop(&mut self) {
-        // SAFETY: The `Slice` struct is guaranteed to be valid for the lifetime of the `EncodedFilter` struct.
+        // SAFETY: The `Slice` struct is guaranteed to be valid for the lifetime of the `Bip158Filter` struct.
         unsafe { bindings::free_filter(self.0) }
     }
 }
