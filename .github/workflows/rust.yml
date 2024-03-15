@@ -109,6 +109,9 @@ jobs:
     name: Publish to Crates.io
     needs: [build, fuzz_targets]
     runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ./rust-bindings
     steps:
       - uses: actions/checkout@v4
 
