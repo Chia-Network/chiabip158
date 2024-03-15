@@ -1,0 +1,21 @@
+[package]
+name = "chiabip158-fuzz"
+version = "0.0.0"
+publish = false
+edition = "2021"
+
+[package.metadata]
+cargo-fuzz = true
+
+[dependencies]
+libfuzzer-sys = "0.4"
+
+[dependencies.chiabip158]
+path = ".."
+
+[[bin]]
+name = "fuzz_filter"
+path = "fuzz_targets/fuzz_filter.rs"
+test = false
+doc = false
+bench = false
