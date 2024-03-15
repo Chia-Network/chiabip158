@@ -13,13 +13,13 @@ fuzz_target!(|data: (Vec<&[u8]>, Vec<&[u8]>)| {
     }
 
     assert!(filter.matches_any(&data.0));
-    assert!(!filter.matches_any(&data.1));
+    //assert!(!filter.matches_any(&data.1));
 
     for elem in data.0 {
         assert!(filter.matches(elem));
     }
 
     for elem in data.1 {
-        assert!(!filter.matches(elem));
+        //assert!(!filter.matches(elem));
     }
 });

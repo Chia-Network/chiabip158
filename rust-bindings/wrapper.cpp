@@ -1,6 +1,6 @@
 #include "wrapper.h"
 
-GCSFilter create_filter(Slice const* hashes, size_t length) {
+GCSFilter::ElementSet create_element_set(Slice const* hashes, size_t length) {
     GCSFilter::ElementSet elements;
 
     for (size_t i = 0; i < length; i++) {
@@ -8,7 +8,12 @@ GCSFilter create_filter(Slice const* hashes, size_t length) {
         auto element = GCSFilter::Element(hash.bytes, hash.bytes + hash.length);
         elements.insert(std::move(element));
     }
-    
+
+    return elements;
+}
+
+GCSFilter create_filter(Slice const* hashes, size_t length) {
+    auto elements = create_element_set(hashes, length);
     return GCSFilter({0, 0, 20, 1 << 20}, elements);
 }
 
@@ -28,14 +33,7 @@ bool filter_match(GCSFilter const* filter, Slice hash) {
 }
 
 bool filter_match_any(GCSFilter const* filter, Slice const* hashes, size_t length) {
-    GCSFilter::ElementSet elements;
-    
-    for (int i = 0; i < length; i++) {
-        Slice hash = hashes[i];
-        auto element = GCSFilter::Element(hash.bytes, hash.bytes + hash.length);
-        elements.insert(std::move(element));
-    }
-    
+    auto elements = create_element_set(hashes, length);
     return filter->MatchAny(elements);
 }
 
