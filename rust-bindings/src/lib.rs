@@ -41,7 +41,7 @@ impl Drop for EncodedFilter {
 }
 
 /// A BIP 158 filter.
-pub struct Bip158Filter(bindings::GCSFilter);
+pub struct Bip158Filter(*const bindings::GCSFilter);
 
 impl Bip158Filter {
     /// Encode a BIP 158 filter from a list of slices.
@@ -62,11 +62,7 @@ impl Bip158Filter {
     /// Encodes the filter.
     pub fn encode(&self) -> EncodedFilter {
         // SAFETY: The `GCSFilter` struct is guaranteed to be valid for the lifetime of the `Bip158Filter` struct.
-        unsafe {
-            EncodedFilter(bindings::encode_filter(
-                &self.0 as *const bindings::GCSFilter,
-            ))
-        }
+        unsafe { EncodedFilter(bindings::encode_filter(self.0)) }
     }
 
     /// Matches a single slice against the filter.
@@ -75,7 +71,7 @@ impl Bip158Filter {
         // struct is guaranteed to be valid for the lifetime of the `Bip158Filter` struct, so this should be safe.
         unsafe {
             bindings::filter_match(
-                &self.0 as *const bindings::GCSFilter,
+                self.0,
                 bindings::Slice {
                     bytes: slice.as_ptr(),
                     length: slice.len(),
@@ -97,13 +93,14 @@ impl Bip158Filter {
 
         // SAFETY: The length provided matches the number of slices, and the `GCSFilter`
         // struct is guaranteed to be valid for the lifetime of the `Bip158Filter` struct, so this should be safe.
-        unsafe {
-            bindings::filter_match_any(
-                &self.0 as *const bindings::GCSFilter,
-                slices.as_ptr(),
-                slices.len(),
-            )
-        }
+        unsafe { bindings::filter_match_any(self.0, slices.as_ptr(), slices.len()) }
+    }
+}
+
+impl Drop for Bip158Filter {
+    fn drop(&mut self) {
+        // SAFETY: The `Slice` struct is guaranteed to be valid for the lifetime of the `Bip158Filter` struct.
+        unsafe { bindings::free_filter(self.0) }
     }
 }
 

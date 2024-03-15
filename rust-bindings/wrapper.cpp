@@ -12,9 +12,9 @@ GCSFilter::ElementSet create_element_set(Slice const* hashes, size_t length) {
     return elements;
 }
 
-GCSFilter create_filter(Slice const* hashes, size_t length) {
+GCSFilter const* create_filter(Slice const* hashes, size_t length) {
     auto elements = create_element_set(hashes, length);
-    return GCSFilter({0, 0, 20, 1 << 20}, elements);
+    return new GCSFilter({0, 0, 20, 1 << 20}, elements);
 }
 
 Slice encode_filter(GCSFilter const* filter) {
@@ -39,4 +39,8 @@ bool filter_match_any(GCSFilter const* filter, Slice const* hashes, size_t lengt
 
 void free_slice(Slice slice) {
     delete[] slice.bytes;
+}
+
+void free_filter(GCSFilter const* filter) {
+    delete filter;
 }
