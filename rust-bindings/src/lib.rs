@@ -110,21 +110,28 @@ mod tests {
 
     use rand::{RngCore, SeedableRng};
     use rand_chacha::ChaCha8Rng;
+    use sha2::{digest::FixedOutput, Digest, Sha256};
 
     use super::*;
 
+    fn hash(bytes: &[u8]) -> [u8; 32] {
+        let mut hasher = Sha256::new();
+        hasher.update(bytes);
+        hasher.finalize_fixed().into()
+    }
+
     #[test]
     fn test_filter() {
-        let elem1 = b"abc";
-        let elem2 = b"xyz";
-        let elem3 = b"123";
-        let not_elem1 = b"hello";
-        let not_elem2 = b"bye";
+        let elem1 = &hash(b"abc");
+        let elem2 = &hash(b"xyz");
+        let elem3 = &hash(b"123");
+        let not_elem1 = &hash(b"hello");
+        let not_elem2 = &hash(b"bye");
 
         let filter = Bip158Filter::new(&[elem1, elem2, elem3]);
 
         let encoded = filter.encode();
-        assert_eq!(encoded.as_ref(), [3, 95, 172, 194, 74, 190, 73, 221, 182]);
+        assert_eq!(encoded.as_ref(), [3, 174, 90, 204, 224, 219, 7, 253, 91]);
         assert_eq!(&encoded, &encoded);
 
         assert!(filter.matches(elem1));
@@ -137,6 +144,8 @@ mod tests {
         assert!(filter.matches_any(&[elem1, elem2, elem3]));
         assert!(filter.matches_any(&[elem1, elem2]));
         assert!(filter.matches_any(&[elem3]));
+        assert!(filter
+            .matches_any(&[not_elem1, not_elem1, elem1, not_elem2, not_elem1, not_elem2, elem2]));
 
         assert!(!filter.matches_any(&[]));
         assert!(!filter.matches_any(&[not_elem1, not_elem2]));

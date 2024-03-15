@@ -6,3 +6,4 @@
 /venv
 /build
 /var
+__pycache__
