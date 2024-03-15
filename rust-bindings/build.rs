@@ -40,6 +40,7 @@ fn main() {
         .allowlist_function("filter_match")
         .allowlist_function("filter_match_any")
         .allowlist_function("free_slice")
+        .allowlist_function("free_filter")
         .parse_callbacks(Box::new(bindgen::CargoCallbacks::new()))
         .generate()
         .expect("Unable to generate bindings");
