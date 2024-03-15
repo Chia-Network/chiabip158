@@ -66,11 +66,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "cc"
-version = "1.0.90"
-source = "git+https://github.com/0123456789-jpg/cc-rs?rev=41a8731#41a87317593083e0e41ca33fe2209f99c3fef80b"
-
-[[package]]
 name = "cexpr"
 version = "0.6.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -87,10 +82,10 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chiabip158"
-version = "1.5.0"
+version = "1.5.1"
 dependencies = [
  "bindgen",
- "cc 1.0.90 (git+https://github.com/0123456789-jpg/cc-rs?rev=41a8731)",
+ "cc",
  "rand",
  "rand_chacha",
  "sha2",
@@ -239,7 +234,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "a96cfd5557eb82f2b83fed4955246c988d331975a002961b07c81584d107e7f7"
 dependencies = [
  "arbitrary",
- "cc 1.0.90 (registry+https://github.com/rust-lang/crates.io-index)",
+ "cc",
  "once_cell",
 ]
 
