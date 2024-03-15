@@ -45,15 +45,12 @@ pub struct Bip158Filter(*const bindings::GCSFilter);
 
 impl Bip158Filter {
     /// Encode a BIP 158 filter from a list of slices.
-    pub fn new(slices: &[&[u8]]) -> Self {
+    pub fn new<T>(slices: &[T]) -> Self
+    where
+        T: AsRef<[u8]>,
+    {
         // Convert the slices to a type that C/C++ can understand.
-        let slices: Vec<bindings::Slice> = slices
-            .iter()
-            .map(|slice| bindings::Slice {
-                bytes: slice.as_ptr(),
-                length: slice.len(),
-            })
-            .collect();
+        let slices: Vec<bindings::Slice> = slices.iter().map(construct_slice).collect();
 
         // SAFETY: The length provided matches the number of slices, so this should be safe.
         unsafe { Self(bindings::create_filter(slices.as_ptr(), slices.len())) }
@@ -81,15 +78,12 @@ impl Bip158Filter {
     }
 
     /// Matches any of a list of slices against the filter.
-    pub fn matches_any(&self, slices: &[&[u8]]) -> bool {
+    pub fn matches_any<T>(&self, slices: &[T]) -> bool
+    where
+        T: AsRef<[u8]>,
+    {
         // Convert the slices to a type that C/C++ can understand.
-        let slices: Vec<bindings::Slice> = slices
-            .iter()
-            .map(|slice| bindings::Slice {
-                bytes: slice.as_ptr(),
-                length: slice.len(),
-            })
-            .collect();
+        let slices: Vec<bindings::Slice> = slices.iter().map(construct_slice).collect();
 
         // SAFETY: The length provided matches the number of slices, and the `GCSFilter`
         // struct is guaranteed to be valid for the lifetime of the `Bip158Filter` struct, so this should be safe.
@@ -101,6 +95,17 @@ impl Drop for Bip158Filter {
     fn drop(&mut self) {
         // SAFETY: The `Slice` struct is guaranteed to be valid for the lifetime of the `Bip158Filter` struct.
         unsafe { bindings::free_filter(self.0) }
+    }
+}
+
+fn construct_slice<T>(slice: &T) -> bindings::Slice
+where
+    T: AsRef<[u8]>,
+{
+    let slice_ref = slice.as_ref();
+    bindings::Slice {
+        bytes: slice_ref.as_ptr(),
+        length: slice_ref.len(),
     }
 }
 
@@ -147,7 +152,7 @@ mod tests {
         assert!(filter
             .matches_any(&[not_elem1, not_elem1, elem1, not_elem2, not_elem1, not_elem2, elem2]));
 
-        assert!(!filter.matches_any(&[]));
+        assert!(!filter.matches_any(Vec::<&[u8]>::new().as_ref()));
         assert!(!filter.matches_any(&[not_elem1, not_elem2]));
     }
 
@@ -168,8 +173,7 @@ mod tests {
             hash_set.insert(hash);
         }
 
-        let refs: Vec<&[u8]> = hashes.iter().map(|hash| hash.as_ref()).collect();
-        let filter = Bip158Filter::new(&refs);
+        let filter = Bip158Filter::new(&hashes);
 
         let count = 5000000;
         let hashes: Vec<[u8; 4]> = (0..count)
