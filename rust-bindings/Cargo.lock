@@ -87,7 +87,7 @@ checksum = "baf1de4339761588bc0619e3cbc0120ee582ebb74b53b4efbf79117bd2da40fd"
 
 [[package]]
 name = "chiabip158"
-version = "0.1.0"
+version = "1.5.0"
 dependencies = [
  "bindgen",
  "cc 1.0.90 (git+https://github.com/0123456789-jpg/cc-rs?rev=41a8731)",
