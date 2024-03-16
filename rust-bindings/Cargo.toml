@@ -2,6 +2,11 @@
 name = "chiabip158"
 version = "1.5.1"
 edition = "2021"
+license = "Apache-2.0"
+description = "Bindings to the chiabip158 C++ library block filters."
+authors = ["Brandon Haggstrom <b.haggstrom@chia.net>"]
+homepage = "https://github.com/Chia-Network/chiabip158"
+repository = "https://github.com/Chia-Network/chiabip158"
 links = "chiabip158"
 
 [workspace]
