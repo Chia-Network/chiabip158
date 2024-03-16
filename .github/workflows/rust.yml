@@ -127,4 +127,6 @@ jobs:
         if: env.RELEASE == 'true'
         env:
           CARGO_REGISTRY_TOKEN: ${{ secrets.CARGO_REGISTRY_TOKEN }}
-        run: cargo publish
+        run: |
+          ln -s ../src ./cpp
+          cargo publish --allow-dirty
