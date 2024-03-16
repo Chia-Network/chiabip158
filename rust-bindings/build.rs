@@ -4,30 +4,40 @@ use std::path::PathBuf;
 fn main() {
     println!("cargo:rerun-if-changed=wrapper.cpp");
 
+    let manifest_dir = PathBuf::from(env::var("CARGO_MANIFEST_DIR").unwrap());
+
+    let mut src_dir = manifest_dir.join("cpp");
+    if !src_dir.exists() {
+        src_dir = manifest_dir
+            .parent()
+            .expect("can't access ../src")
+            .join("src")
+    }
+
     cc::Build::new()
         .cpp(true)
         .std("c++14")
         .files([
-            "../src/blockfilter.cpp",
-            "../src/crypto/sha256.cpp",
-            "../src/crypto/siphash.cpp",
-            "../src/primitives/block.cpp",
-            "../src/primitives/transaction.cpp",
-            "../src/script/script.cpp",
-            "../src/util/strencodings.cpp",
-            "../src/util/bytevectorhash.cpp",
-            "../src/uint256.cpp",
-            "./wrapper.cpp",
+            src_dir.join("blockfilter.cpp"),
+            src_dir.join("crypto/sha256.cpp"),
+            src_dir.join("crypto/siphash.cpp"),
+            src_dir.join("primitives/block.cpp"),
+            src_dir.join("primitives/transaction.cpp"),
+            src_dir.join("script/script.cpp"),
+            src_dir.join("util/strencodings.cpp"),
+            src_dir.join("util/bytevectorhash.cpp"),
+            src_dir.join("uint256.cpp"),
+            manifest_dir.join("wrapper.cpp"),
         ])
         .warnings(false)
-        .include("../src")
+        .include(src_dir.as_path())
         .compile("chiabip158");
 
     let bindings = bindgen::Builder::default()
-        .header("./wrapper.h")
+        .header(manifest_dir.join("wrapper.h").to_str().unwrap())
         .clang_arg("-x")
         .clang_arg("c++")
-        .clang_arg("-I../src")
+        .clang_arg(format!("-I{}", src_dir.to_str().unwrap()))
         .clang_arg("-std=c++14")
         .blocklist_item("GCSFilter.+")
         .blocklist_item("ByteVector.*")
