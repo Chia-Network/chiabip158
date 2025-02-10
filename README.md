@@ -1,13 +1,9 @@
 # Chia BIP158
 
-![Build](https://github.com/Chia-Network/chiabip158/workflows/Build/badge.svg)
+![Build](https://github.com/Chia-Network/chiabip158/actions/workflows/build.yml/badge.svg)
 ![PyPI](https://img.shields.io/pypi/v/chiabip158?logo=pypi)
 ![PyPI - Format](https://img.shields.io/pypi/format/chiabip158?logo=pypi)
 ![GitHub](https://img.shields.io/github/license/Chia-Network/chiabip158?logo=Github)
-
-[![Total alerts](https://img.shields.io/lgtm/alerts/g/Chia-Network/chiabip158.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Chia-Network/chiabip158/alerts/)
-[![Language grade: Python](https://img.shields.io/lgtm/grade/python/g/Chia-Network/chiabip158.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Chia-Network/chiabip158/context:python)
-[![Language grade: C/C++](https://img.shields.io/lgtm/grade/cpp/g/Chia-Network/chiabip158.svg?logo=lgtm&logoWidth=18)](https://lgtm.com/projects/g/Chia-Network/chiabip158/context:cpp)
 
 This implements the compact block filter construction in BIP 158. The code is
 not used anywhere in the Bitcoin Core code base yet. The next step towards
