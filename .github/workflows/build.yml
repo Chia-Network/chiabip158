@@ -134,7 +134,7 @@ jobs:
         path: ./dist
 
   build-sdist:
-    name: sdist - ${{ matrix.os.name }}-py-${{ matrix.python.major-dot-minor }} ${{ matrix.arch.name }}
+    name: sdist - ${{ matrix.os.name }} ${{ matrix.python.major-dot-minor }} ${{ matrix.arch.name }}
     runs-on: ${{ matrix.os.runs-on[matrix.arch.matrix] }}
     strategy:
       fail-fast: false
