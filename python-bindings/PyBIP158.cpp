@@ -17,10 +17,10 @@
 PyBIP158::PyBIP158(std::vector< std::vector< unsigned char > >& hashes)
 {
     GCSFilter::ElementSet elements;
-    for (int i = 0; i < hashes.size(); ++i)
+    for (size_t i = 0; i < hashes.size(); ++i)
     {
         GCSFilter::Element element(hashes[i].size());
-        for(int j=0;j<hashes[i].size();j++)
+        for(size_t j=0;j<hashes[i].size();j++)
         {
             element[j] = hashes[i][j];
         }
@@ -47,7 +47,7 @@ PyBIP158::~PyBIP158()
 bool PyBIP158::Match(std::vector< unsigned char >& hash)
 {
     GCSFilter::Element element(hash.size());
-    for(int j=0;j<hash.size();j++)
+    for(size_t j=0;j<hash.size();j++)
     {
         element[j] = hash[j];
     }
@@ -59,10 +59,10 @@ bool PyBIP158::MatchAny(std::vector< std::vector< unsigned char > >& hashes)
 {
     GCSFilter::ElementSet elements;
     
-    for (int i = 0; i < hashes.size(); ++i)
+    for (size_t i = 0; i < hashes.size(); ++i)
     {
         GCSFilter::Element element(hashes[i].size());
-        for(int j=0;j<hashes[i].size();j++)
+        for(size_t j=0;j<hashes[i].size();j++)
         {
             element[j] = hashes[i][j];
         }

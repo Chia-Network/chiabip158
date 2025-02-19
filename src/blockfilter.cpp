@@ -165,8 +165,10 @@ bool GCSFilter::MatchInternal(const uint64_t* element_hashes, size_t size) const
     VectorReader stream(GCS_SER_TYPE, GCS_SER_VERSION, m_encoded, 0);
 
     // Seek forward by size of N
+#ifndef NDEBUG
     uint64_t N = ReadCompactSize(stream);
     assert(N == m_N);
+#endif
 
     BitStreamReader<VectorReader> bitreader(stream);
 

@@ -462,6 +462,7 @@ TransformD64Type TransformD64_2way = nullptr;
 TransformD64Type TransformD64_4way = nullptr;
 TransformD64Type TransformD64_8way = nullptr;
 
+#ifndef NDEBUG
 bool SelfTest() {
     // Input state (equal to the initial SHA256 state)
     static const uint32_t init[8] = {
@@ -546,7 +547,7 @@ bool SelfTest() {
 
     return true;
 }
-
+#endif
 
 #if defined(USE_ASM) && (defined(__x86_64__) || defined(__amd64__) || defined(__i386__))
 // We can't use cpuid.h's __get_cpuid as it does not support subleafs.
