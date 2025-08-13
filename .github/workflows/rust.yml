@@ -55,7 +55,7 @@ jobs:
       run:
         working-directory: ./rust-bindings
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set Env
         uses: Chia-Network/actions/setjobenv@main
@@ -95,7 +95,7 @@ jobs:
       run:
         working-directory: ./rust-bindings
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: dtolnay/rust-toolchain@nightly
 
       - name: cargo-fuzz
@@ -113,7 +113,7 @@ jobs:
       run:
         working-directory: ./rust-bindings
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set Env
         uses: Chia-Network/actions/setjobenv@main
