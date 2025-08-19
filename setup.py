@@ -123,7 +123,7 @@ setup(
     description="Chia BIP158 (wraps C++)",
     license="Apache License",
     packages=["chiabip158"],
-    package_data={"chiabip158": ["__init__.pyi"]},
+    package_data={"chiabip158": ["__init__.pyi", "py.typed"]},
     python_requires=">=3.7",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
