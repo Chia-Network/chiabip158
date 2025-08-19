@@ -24,7 +24,7 @@ class get_pybind_include(object):
 
 ext_modules = [
     Extension(
-        "chiabip158.chiabip158",
+        "chiabip158._chiabip158",
         [
             "src/blockfilter.cpp",
             "src/crypto/sha256.cpp",
