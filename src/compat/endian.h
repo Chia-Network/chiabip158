@@ -15,7 +15,7 @@
 
 #if defined(HAVE_ENDIAN_H)
 #include <endian.h>
-#elif defined(HAVE_SYS_ENDIAN_H)
+#elif defined(HAVE_SYS_ENDIAN_H) && !defined(__APPLE__)
 #include <sys/endian.h>
 #endif
 
