@@ -120,7 +120,12 @@ jobs:
         CIBW_ENVIRONMENT_MACOS: "MACOSX_DEPLOYMENT_TARGET=13 SYSTEM_VERSION_COMPAT=0"
         CIBW_BEFORE_ALL_WINDOWS: python -m pip install --upgrade pip
         CIBW_TEST_REQUIRES: pytest
-        CIBW_TEST_COMMAND: py.test -v {project}/tests
+        # we have to rename the `chiabip158` source or our stupid tests import the
+        # source, which is missing the .so file. You might think "why not just
+        # change the directory?" That's a great question and I've tried many
+        # things to do this and nothing works. Debugging in cibuildwheel is
+        # next to impossible.
+        CIBW_TEST_COMMAND: mv {project}/chiabip158 {project}/DO_NOT_IMPORT && py.test -v {project}/tests
       run:
         pipx run --spec='cibuildwheel==2.21.3' cibuildwheel --output-dir dist 2>&1
 
