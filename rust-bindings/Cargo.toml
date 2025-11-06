@@ -1,6 +1,6 @@
 [package]
 name = "chiabip158"
-version = "1.5.3"
+version = "1.5.4"
 edition = "2021"
 license = "Apache-2.0"
 description = "Bindings to the chiabip158 C++ library block filters."
