@@ -166,6 +166,7 @@ bool GCSFilter::MatchInternal(const uint64_t* element_hashes, size_t size) const
 
     // Seek forward by size of N
     uint64_t N = ReadCompactSize(stream);
+    (void)N; // suppress unused variable warning
     assert(N == m_N);
 
     BitStreamReader<VectorReader> bitreader(stream);
