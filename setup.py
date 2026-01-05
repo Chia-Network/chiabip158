@@ -24,7 +24,7 @@ class get_pybind_include(object):
 
 ext_modules = [
     Extension(
-        "chiabip158",
+        "chiabip158.chiabip158",
         [
             "src/blockfilter.cpp",
             "src/crypto/sha256.cpp",
@@ -122,6 +122,8 @@ setup(
     author_email="mariano@chia.net",
     description="Chia BIP158 (wraps C++)",
     license="Apache License",
+    packages=["chiabip158"],
+    package_data={"chiabip158": ["__init__.pyi", "py.typed"]},
     python_requires=">=3.7",
     long_description=open("README.md").read(),
     long_description_content_type="text/markdown",
