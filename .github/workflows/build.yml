@@ -93,7 +93,7 @@ jobs:
       uses: Chia-Network/actions/clean-workspace@main
 
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v6.0.2
       with:
         fetch-depth: 0
 
@@ -164,7 +164,7 @@ jobs:
       uses: Chia-Network/actions/clean-workspace@main
 
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v6.0.2
       with:
         fetch-depth: 0
 
@@ -207,7 +207,7 @@ jobs:
       uses: Chia-Network/actions/clean-workspace@main
 
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v6.0.2
       with:
         fetch-depth: 0
 
@@ -253,7 +253,7 @@ jobs:
       uses: Chia-Network/actions/clean-workspace@main
 
     - name: Checkout code
-      uses: actions/checkout@v6
+      uses: actions/checkout@v6.0.2
       with:
         fetch-depth: 0
 
