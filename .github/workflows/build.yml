@@ -98,7 +98,6 @@ jobs:
 
     - name: Build and test
       env:
-        CIBW_PRERELEASE_PYTHONS: True
         CIBW_BUILD_VERBOSITY_MACOS: 0
         CIBW_BUILD_VERBOSITY_LINUX: 0
         CIBW_BUILD_VERBOSITY_WINDOWS: 0
@@ -123,7 +122,7 @@ jobs:
         # next to impossible.
         CIBW_TEST_COMMAND: mv {project}/chiabip158 {project}/DO_NOT_IMPORT && py.test -v {project}/tests
       run:
-        pipx run --spec='cibuildwheel==3.2.1' cibuildwheel --output-dir dist 2>&1
+        pipx run --spec='cibuildwheel==4.3.1' cibuildwheel --output-dir dist 2>&1
 
     - name: Upload artifacts
       uses: actions/upload-artifact@v7
